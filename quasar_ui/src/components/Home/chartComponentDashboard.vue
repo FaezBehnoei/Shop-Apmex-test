@@ -1,6 +1,5 @@
 <template>
   <div class="chart-container">
-
     <!-- filter data  -->
     <div class="time-filter-container q-mb-md q-pa-xs bg-white-light-active flex items-center justify-between">
       <div
@@ -16,8 +15,12 @@
     <!-- نمودار -->
     <div class="chart-wrapper q-px-none">
       <Line ref="chartRef" :data="internalData" :options="chartOptions" />
+      <!-- Tooltip داخل همین container -->
+      <div ref="tooltipRef" class="custom-tooltip" v-show="showTooltip">
+        <div class="tooltip-value">{{ tooltipData.value }}</div>
+        <div class="tooltip-time">{{ tooltipData.time }}</div>
+      </div>
     </div>
-
 
     <!-- فیلترهای زمانی -->
     <div class="time-indicators q-mx-lg">
@@ -42,7 +45,7 @@ import {
   Tooltip
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
-import {  ref, nextTick, watch, computed } from 'vue'
+import { ref, nextTick, watch, computed, onBeforeUnmount, reactive } from 'vue'
 
 const indicatorColors = {
   gold: 'rgba(231, 194, 77, 1)',
@@ -59,6 +62,25 @@ const props = defineProps({
 })
 
 const modelValue = ref('24h')
+const chartRef = ref(null)
+const tooltipRef = ref(null)
+const showTooltip = ref(false)
+const tooltipData = reactive({
+  value: '',
+  time: '',
+  x: 0,
+  y: 0
+})
+
+// پاک کردن tooltip قبل از destroy شدن کامپوننت
+onBeforeUnmount(() => {
+  showTooltip.value = false
+  // پاک کردن هر tooltip که ممکنه در DOM باشه
+  const existingTooltip = document.getElementById('chartjs-tooltip')
+  if (existingTooltip) {
+    existingTooltip.remove()
+  }
+})
 
 watch(
   [() => props.data, () => props.timestamps, () => modelValue.value],
@@ -70,20 +92,18 @@ watch(
     const ctx = chart.ctx
     const rawData = props.data?.[modelValue.value] || {}
 
-     if (Object.keys(rawData).length === 0) return ;
+    if (Object.keys(rawData).length === 0) return
 
     chart.data.labels = props.timestamps || []
 
     const allValues = Object.values(rawData).flat()
-    if (allValues.length === 0) return;
+    if (allValues.length === 0) return
     const globalMin = Math.min(...allValues)
-
 
     chart.data.datasets = Object.entries(rawData).map(([key, values]) => {
       const color = indicatorColors[key]
       const gradient = ctx.createLinearGradient(0, 0, 0, chart.height)
 
-      // Fix gradient logic
       if (values && Array.isArray(values) && Math.min(...values) === globalMin) {
         gradient.addColorStop(0, color.replace('1)', '0.9)'))
         gradient.addColorStop(1, 'rgba(228, 229, 241, 0.05)')
@@ -100,23 +120,20 @@ watch(
         fill: true,
         tension: 0.4,
         borderWidth: 2,
-        pointRadius: 0, // Always 0, will be handled by hover
+        pointRadius: 0,
         pointHoverRadius: 4,
-        pointBorderWidth: 0, // Remove border
-        pointHoverBorderWidth: 0, // Remove border on hover
+        pointBorderWidth: 0,
+        pointHoverBorderWidth: 0,
         pointBackgroundColor: 'rgba(12, 38, 71, 1)',
         pointHoverBackgroundColor: 'rgba(12, 38, 71, 1)',
       }
     })
-
-
 
     chart.update('none')
   },
   { immediate: true }
 )
 
-const chartRef = ref(null)
 const options = [
   { label: '۲۴ ساعت', value: '24h' },
   { label: '۱ هفته', value: '1w' },
@@ -138,6 +155,31 @@ const formatToMillions = (value) => {
          toPersianDigits(String(value % 1000).padStart(3, '0'))
 }
 
+// کاستوم tooltip که مشکل ساز نباشه
+const customTooltipHandler = (context) => {
+  const tooltipModel = context.tooltip
+
+  if (tooltipModel.opacity === 0) {
+    showTooltip.value = false
+    return
+  }
+
+  if (tooltipModel.body && tooltipModel.dataPoints?.length > 0) {
+    const dataIndex = tooltipModel.dataPoints[0].dataIndex
+    const value = tooltipModel.dataPoints[0].raw
+    const time = props.timestamps?.[dataIndex] || ''
+
+    tooltipData.value = `${formatToMillions(value)} تومان`
+    tooltipData.time = time
+
+    tooltipData.x = Math.max(tooltipModel.caretX - 60, 10)
+    tooltipData.y = Math.max(tooltipModel.caretY - 25, 10) // جلوگیری از رفتن بالای container
+
+    showTooltip.value = true
+  }
+}
+
+// Plugin های بهینه شده
 ChartJS.register({
   id: 'dashedGridFixer',
   beforeDraw(chart, args, options) {
@@ -167,8 +209,8 @@ ChartJS.register({
   beforeDraw(chart) {
     const { ctx, scales } = chart
     const xScale = scales.x
-     if (!ctx || !xScale) return ;
-    const y =  xScale.bottom - 30
+    if (!ctx || !xScale) return
+    const y = xScale.bottom - 30
 
     ctx.save()
     ctx.strokeStyle = '#D0D0D0'
@@ -198,7 +240,7 @@ ChartJS.register({
     const xScale = scales.x
     const yBottom = chartArea.bottom + 4
 
-        if (!xScale?.ticks || !xScale?.getPixelForTick || xScale.ticks.length === 0) return
+    if (!xScale?.ticks || !xScale?.getPixelForTick || xScale.ticks.length === 0) return
 
     const firstX = xScale.getPixelForTick(0)
     const tickCount = xScale.ticks?.length || 0
@@ -291,61 +333,15 @@ const chartOptions = {
     legend: { display: false },
     tooltip: {
       enabled: false,
-      external: (context) => {
-        let tooltipEl = document.getElementById('chartjs-tooltip');
-
-        if (!tooltipEl) {
-          tooltipEl = document.createElement('div');
-          tooltipEl.id = 'chartjs-tooltip';
-          tooltipEl.innerHTML = '<div class="tooltip-content"></div>';
-          document.body.appendChild(tooltipEl);
-        }
-
-        const tooltipModel = context.tooltip;
-        if (tooltipModel.opacity === 0) {
-          tooltipEl.style.opacity = 0;
-          return;
-        }
-
-        if (tooltipModel.body) {
-          const dataIndex = tooltipModel.dataPoints[0].dataIndex;
-          const value = tooltipModel.dataPoints[0].raw;
-          const time = props.timestamps?.[dataIndex] || '';
-
-          tooltipEl.className = 'custom-tooltip'
-          tooltipEl.innerHTML = `
-            <div class="tooltip-value">${formatToMillions(value)} تومان</div>
-            <div class="tooltip-time">${time}</div>
-          `
-
-        }
-
-        // قسمت Positioning در tooltip
-     // قسمت Positioning در tooltip
-        const position = context.chart.canvas.getBoundingClientRect();
-
-        tooltipEl.style.opacity = 1;
-        tooltipEl.style.position = 'absolute';
-
-        requestAnimationFrame(() => {
-          const tooltipWidth = tooltipEl.offsetWidth || 200;
-          const tooltipHeight = tooltipEl.offsetHeight || 60;
-
-          tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX - (tooltipWidth / 0.9) + 'px';
-          tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - tooltipHeight + 25 + 'px';
-        });
-      }
+      external: customTooltipHandler
     },
     dashedGridFixer: {
       dash: [5, 5],
       width: 1.5,
       color: '#E6E6E6'
-    },
-    xAxisVerticalDashedLines: {},
-    startEndVerticalLines: {}
+    }
   }
 }
-
 </script>
 
 <style scoped>
@@ -362,23 +358,6 @@ const chartOptions = {
 
 .chart-wrapper canvas {
   width: 100% !important;
-}
-
-.price-header {
-  margin-bottom: 0.9375rem;
-  text-align: right;
-}
-
-.price-label {
-  font-size: 0.875rem;
-  color: #444;
-}
-
-.price-value {
-  font-size: 1.125rem;
-  font-weight: bold;
-  color: #000;
-  margin-right: 0.5rem;
 }
 
 .time-indicators {
@@ -411,36 +390,39 @@ const chartOptions = {
   font-weight: 700;
 }
 
-.profit-indicator-div{
+.profit-indicator-div {
   width: 0.625rem;
   height: 0.625rem;
   border-radius: 3px;
   background-color: red;
 }
 
-#chartjs-tooltip {
-  pointer-events: none;
-  z-index: 1000;
-}
-
-</style>
-
-<style>
 .custom-tooltip {
+  position: absolute;
   background-color: rgba(12, 38, 71, 1);
   color: white;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 8px;
   font-family: 'iranYekanWeb';
   text-align: right;
-  position: relative;
+  pointer-events: none;
+  z-index: 1000;
+  left: v-bind('tooltipData.x + "px"');
+  top: v-bind('tooltipData.y + "px"');
+  transform: translateX(-50%);
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 100px;
+  max-width: 200px;
 }
+
 .tooltip-value {
   font-size: 0.625rem;
   font-weight: 400;
   line-height: 0.875rem;
   margin-bottom: 0.25rem;
 }
+
 .tooltip-time {
   font-size: 0.625rem;
   font-weight: 400;
