@@ -20,7 +20,11 @@
             <p class="typography-body-md-regular text-white-dark-hover q-mb-sm">کد تایید برای شماره <span class="phone-number">{{ phoneNumberTemporary }}</span> پیامک شد :</p>
             <router-link :to="previousRoute" class="typography-caption-lg-bold edit-number-btn ">ویرایش شماره موبایل</router-link>
             <div class="flex items-center justify-evenly otp-div">
-              <input data-no-fa maxlength="1" v-for="(item,index) in otpDigits.length" :key="index" type="text" class="otp-inputs flex flex-center text-center bg-white-light-active" v-model="otpDigits[index]" ref="inputs" @input="moveToNext(index, $event)" @keydown.backspace="moveToPrev(index)">
+              <input data-no-fa maxlength="1" v-for="(item,index) in otpDigits.length" :key="index"  type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="one-time-code"
+                class="otp-inputs flex flex-center text-center bg-white-light-active" v-model="otpDigits[index]" ref="inputs" @input="moveToNext(index, $event)" @keydown.backspace="moveToPrev(index)">
             </div>
             <p class="typography-body-md-regular text-white-darker text-center custom-margin-code">
               <span v-if="expireOTP">{{ formattedTimer }} مانده تا ارسال کد مجدد</span>
@@ -96,6 +100,7 @@ const formattedTimer = computed(() => {
 async function handleSubmit(){
   if (loading.value || !isCompleted.value) return;
   loading.value = true
+  router.push('/home')
   try{
     if(flowType === 'login'){
       const response = await verifyOtp({otpCode: otpDigits.value.join(""), otpToken: otptoken.value})
