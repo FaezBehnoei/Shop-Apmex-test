@@ -17,7 +17,7 @@
     </div>
     <!-- logo  -->
     <div class="flex custom-margin-logo">
-      <img src="/src/assets/monograms/Property 1=monogram_color 2_48px.svg" alt="monogram" class="q-ml-md" :width="48" />
+      <img src="@/assets/monograms/Property 1=monogram_color 2_48px.svg" alt="monogram" class="q-ml-md" :width="48" />
       <img src="/images/logo (1).svg" alt="logo" :width="144" />
     </div>
     <!-- text  -->
