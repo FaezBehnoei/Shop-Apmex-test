@@ -101,7 +101,7 @@ onUnmounted(() => {
   width: 100%;
   object-fit: contain;
   margin-bottom: 4.0625rem; /* 65px */
-  max-height: 40vh;
+  max-height: 45vh;
 }
 
 .dots {
