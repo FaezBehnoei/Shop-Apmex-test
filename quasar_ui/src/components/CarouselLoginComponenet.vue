@@ -31,7 +31,6 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import monogram from '/src/assets/monograms/monogram_color_2_48px.svg'
 
-
 let isAutoInterval = null
 const slides = ref([
   {id:1, img:'/images/carouselLogin1.svg',text:'گلدیس سیستم پیشرفته‌ی خرید طلای فیزیکی و مقایسه آخرین قیمت فلزات گرانبها با بازار '},
@@ -45,8 +44,9 @@ function goToSlide(idx){
   currentIndex.value = idx
 }
 
+// استفاده از translate3d برای بهینه‌سازی GPU
 const slideStyle = computed(() => ({
-  transform: `translateX(${currentIndex.value * 100}%)`
+  transform: `translate3d(${currentIndex.value * 100}%, 0, 0)`
 }))
 
 function dotClass(idx){
@@ -58,10 +58,8 @@ function dotClass(idx){
 
 const next = () => {
   if (currentIndex.value >= slides.value.length - 1) {
-    // Smoothly return to the first slide when reaching the end
     currentIndex.value = 0
   } else {
-    // Move forward
     currentIndex.value++
   }
 }
@@ -81,26 +79,30 @@ onUnmounted(() => {
   overflow: hidden;
   max-width: 23.4375rem; /* 375px */
   position: relative;
+  contain: layout style paint; /* بهینه‌سازی rendering */
 }
 
 .carousel-slides {
   display: flex;
   transition: transform 0.5s ease-in-out;
-
+  will-change: transform; /* بهینه‌سازی GPU */
+  backface-visibility: hidden; /* جلوگیری از flickering */
+  transform-style: preserve-3d; /* حفظ 3D context */
 }
 
 .carousel-slide {
   min-width: 100%;
   text-align: center;
   user-select: none;
-
+  transform: translateZ(0); /* فعال‌سازی hardware acceleration */
+  backface-visibility: hidden; /* بهینه‌سازی اضافی */
 }
 
 .carousel-slide img {
   width: 100%;
   object-fit: contain;
   margin-bottom: 4.0625rem; /* 65px */
-   max-height: 50vh;
+  max-height: 50vh;
 }
 
 .dots {
@@ -110,6 +112,7 @@ onUnmounted(() => {
   cursor: pointer;
   background-color: #D9D9D9;
   margin-left: 0.375rem; /* 6px */
+  transition: all 0.3s ease; /* انیمیشن نرم برای dots */
 }
 
 .dot--active {
@@ -155,5 +158,12 @@ onUnmounted(() => {
   max-width: 20rem; /* 320px */
   max-height: 20rem; /* 320px */
 }
-</style>
 
+/* اضافه کردن prefixed properties برای سازگاری بیشتر */
+@supports (transform: translate3d(0, 0, 0)) {
+  .carousel-slides {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+}
+</style>
