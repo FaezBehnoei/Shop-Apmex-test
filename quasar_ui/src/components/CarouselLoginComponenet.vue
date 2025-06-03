@@ -17,7 +17,7 @@
     </div>
     <!-- logo  -->
     <div class="flex custom-margin-logo">
-      <img src="@/assets/monograms/Property 1=monogram_color 2_48px.svg" alt="monogram" class="q-ml-md" :width="48" />
+      <img :src="monogram" alt="monogram" class="q-ml-md" :width="48" />
       <img src="/images/logo (1).svg" alt="logo" :width="144" />
     </div>
     <!-- text  -->
@@ -29,6 +29,8 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import monogram from '/src/assets/monograms/monogram_color_2_48px.svg'
+
 
 let isAutoInterval = null
 const slides = ref([
