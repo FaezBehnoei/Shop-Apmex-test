@@ -29,7 +29,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import monogram from '../assets/monograms/monogram_color_2_48px.svg'
+import monogram from '/images/monogram_color_2_48px.svg'
 
 let isAutoInterval = null
 const slides = ref([
