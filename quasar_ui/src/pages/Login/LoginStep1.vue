@@ -116,6 +116,7 @@ function handleIcons() {
 async function handleSubmit() {
   if (loading.value) return;
   loading.value = true
+  router.push('/home');
   try{
     await loginWithPassword({identifier: phoneNumber.value, password: password.value})
     showSuccess('با موفقیت وارد شدید')

@@ -96,7 +96,6 @@ const formattedTimer = computed(() => {
 async function handleSubmit(){
   if (loading.value || !isCompleted.value) return;
   loading.value = true
-  router.push('/home')
   try{
     if(flowType === 'login'){
       const response = await verifyOtp({otpCode: otpDigits.value.join(""), otpToken: otptoken.value})
