@@ -82,6 +82,8 @@ onUnmounted(() => {
 }
 
 .carousel-slides {
+  min-height: 50vh;
+  max-height: 50vh;
   display: flex;
   transition: transform 0.5s ease-in-out;
   will-change: transform; /* بهینه‌سازی GPU */
@@ -91,6 +93,7 @@ onUnmounted(() => {
 
 .carousel-slide {
   min-width: 100%;
+  height: 100%;
   text-align: center;
   user-select: none;
   transform: translateZ(0); /* فعال‌سازی hardware acceleration */
@@ -99,6 +102,7 @@ onUnmounted(() => {
 
 .carousel-slide img {
   width: 100%;
+  height: 100%;
   object-fit: contain;
   margin-bottom: 4.0625rem; /* 65px */
   max-height: 50vh;
@@ -143,9 +147,11 @@ onUnmounted(() => {
   .carousel-slide img {
     margin-bottom: 1rem;
   }
+
 }
 
 .carousel-dots {
+  height: 2vh;
   margin-bottom: 1.5rem; /* 24px */
 }
 
