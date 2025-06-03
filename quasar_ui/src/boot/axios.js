@@ -28,7 +28,7 @@ function deepConvert(obj) {
 }
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:5000',
+  baseURL: 'https://shop-apmex-test.onrender.com',
   withCredentials: true,
   headers: {
     'Accept': 'application/json',
