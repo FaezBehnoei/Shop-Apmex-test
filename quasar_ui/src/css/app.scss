@@ -1,0 +1,165 @@
+// app global css in SCSS form
+// Font Faces
+@font-face {
+    font-family: 'IRANYekanWeb';
+    src: url('/fonts/IRANYekanX-Light.woff') format('woff'),
+         url('/fonts/IRANYekanX-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekanWeb';
+    src: url('/fonts/IRANYekanX-Regular.woff') format('woff'),
+    url('/fonts/IRANYekanX-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekanWeb';
+    src: url('/fonts/IRANYekanX-Medium.woff') format('woff'),
+    url('/fonts/IRANYekanX-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekanWeb';
+    src: url('/fonts/IRANYekanX-Bold.woff') format('woff'),
+    url('/fonts/IRANYekanX-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekanWeb';
+    src: url('/fonts/IRANYekanX-ExtraBold.woff') format('woff'),
+    url('/fonts/IRANYekanX-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  // Global Variables
+  :root {
+    --font-family: 'IRANYekanWeb';
+  }
+  
+  // Global Reset
+  body {
+    font-family: var(--font-family);
+    direction: rtl;
+    text-align: right;
+  }
+  // Base
+  html {
+  font-size: clamp(14px, 4.267vw, 20px);
+}
+
+
+
+  
+  *{
+    direction: rtl;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+    text-decoration: none;
+  }
+  ul, li{
+    list-style: none;
+  }
+  li{
+    cursor: pointer;
+  }
+
+
+  // $typography-sizes: (
+  //   display: 40px 72px,
+  //   h1: 32px 56px,
+  //   h2: 28px 48px,
+  //   h3: 24px 40px,
+  //   h4: 20px 32px,
+  //   subtitle: 18px 28px,
+  //   body-lg: 16px 24px,
+  //   body-md: 14px 22px,
+  //   caption-lg: 12px 18px,
+  //   caption-md: 10px 14px,
+  // );
+  
+  // Typography Utility Classes
+ $typography-sizes: (
+  display: 2.5rem 4.5rem,
+  h1: 2rem 3.5rem,
+  h2: 1.75rem 3rem,
+  h3: 1.5rem 2.5rem,
+  h4: 1.25rem 2rem,
+  subtitle: 1.125rem 1.75rem,
+  body-lg: 1rem 1.5rem,
+  body-md: 0.875rem 1.375rem,
+  caption-lg: 0.75rem 1.125rem,
+  caption-md: 0.625rem 0.875rem,
+);
+
+
+  
+  $weights: (
+    light: 300,
+    regular: 400,
+    medium: 500,
+    bold: 700,
+    extrabold: 800,
+  );
+  
+  // Auto Generate Typography Classes
+  @each $name, $size in $typography-sizes {
+    @each $weight-name, $weight-value in $weights {
+      .typography-#{$name}-#{$weight-name} {
+        font-family: var(--font-family) ;
+        font-size: nth($size, 1);
+        line-height: nth($size, 2);
+        font-weight: $weight-value;
+      }
+    }
+  }
+  
+.my-toast-success {
+  min-width: fit-content;
+  background-color: #e6f9f0;
+  color: #00C897;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+}
+.custom-toast-icon{
+  display: inline-block;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.my-toast-error {
+  min-width: fit-content;
+  background-color: #fdeceb;
+  color: #F04438;
+  border-right: 4px solid #F04438;
+}
+
+.my-toast-info {
+  min-width: fit-content;
+  background-color: #eef2ff;
+  color: #4F46E5;
+  border-right: 4px solid #4F46E5;
+}
+
+.custom-toast-wrapper {
+  min-width: fit-content;
+  display: flex;
+  align-items: center;
+}
+
+

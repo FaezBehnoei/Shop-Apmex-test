@@ -1,0 +1,112 @@
+/* 2. Alternative: CSS Variables Approach (in your global.scss or similar file) */
+
+:root {
+
+    /*black*/
+    --black-title: rgba(0, 0, 0, 1);
+    --black-custom: rgba(3, 3, 3, 1);
+
+    /*Orange */
+    --orange-primary:rgba(255, 127, 51, 1);
+    /* Blue */
+    --blue-light: #E9F1FF;
+    --blue-light-hover: #DCE7F9;
+    --blue-dark: rgba(7, 15, 43, 1);
+    --blue-dark-hover: #123E85;
+    --blue-primary: #090c36;
+    --blue-custom: rgba(12, 38, 71, 1);
+  
+    /* Green */
+    --green-light: #E9F7F1;
+    --green-light-hover: #D6F0E5;
+    --green-dark: #065F4D;
+    --green-dark-hover: #044A3C;
+    
+  
+    /* Yellow */
+    --yellow-light: #F6ECDC;
+    --yellow-normal: rgba(228, 190, 138, 1);
+    --yellow-dark: #7C5A2B;
+  
+    /* Grey */
+    --grey-light: #F5F5F5;
+    --grey-normal: rgba(37, 37, 37, 1);
+    --grey-normal-hover:rgba(33, 33, 33, 1);
+    --grey-normal-active: rgba(30, 30, 30, 1);
+    --grey-dark: rgba(28, 28, 28, 1);
+    --grey-label: rgba(103, 103, 103, 1);
+    --grey-custom: rgba(76, 76, 76, 1);
+  
+    /* White */
+    --white: rgb(255, 255, 255);
+    --white-hover: rgb(248, 248, 248);
+    --white-border: rgb(237, 237, 237);
+    --white-text: #2C2C2C;
+    --white-active : rgba(184, 184, 184, 1);
+    --white-dark: rgba(173, 173, 173, 1);
+    --white-dark-hover: rgba(138, 138, 138, 1);
+    --white-light: rgba(241, 241, 241, 1);
+    --white-darker: rgba(81, 81, 81, 1);
+    --white-dark-active: rgba(103, 103, 103, 1);
+    --white-normal:rgba(230, 230, 230, 1);
+    --white-light:rgb(253,253,253);
+    --white-light-hover:rgb(251,251,251);
+    --white-light-active:rgba(241, 241, 241, 1);
+    --white-normal-hover : rgba(207, 207, 207, 1);
+  }
+  
+  /* Auto-generate utility classes */
+  $colors: (
+    'black-title',
+    'black-custom'
+    'orange-primary',
+    'blue-light',
+    'blue-light-hover',
+    'blue-dark',
+    'blue-dark-hover',
+    'blue-primary',
+    'blue-custom',
+    'green-light',
+    'green-light-hover',
+    'green-dark',
+    'green-dark-hover',
+    'yellow-light',
+    'yellow-normal',
+    'yellow-dark',
+    'grey-light',
+    'grey-normal',
+    'grey-normal-hover',
+    'grey-dark',
+    'grey-normal-active',
+    'grey-label',
+    'grey-custom'
+    'white',
+    'white-hover',
+    'white-border',
+    'white-text',
+    'white-active',
+    'white-dark',
+    'white-dark-hover',
+    'white-light',
+    'white-darker',
+    'white-dark-active',
+    'white-normal',
+    'white-light',
+    'white-light-hover',
+    'white-light-active',
+    'white-normal-hover',
+  );
+  
+  @each $color in $colors {
+    .bg-#{$color} {
+      background-color: var(--#{$color});
+    }
+  
+    .text-#{$color} {
+      color: var(--#{$color});
+    }
+    
+    .border-#{$color} {
+      border-color: var(--#{$color});
+    }
+  }

@@ -1,0 +1,34 @@
+// rem-spacing-overrides.scss  
+// این SCSS، بر مبنای یک Map خودکار، تمام کلاس‌های q-pa-*, q-pt-*, q-mt-*، ... را  
+// با rem تولید می‌کند و !important هم می‌زند تا اولویت داشته باشد.
+
+$spacing-sizes: (
+  xs: 0.25rem,
+  sm: 0.5rem,
+  md: 1rem,
+  lg: 1.5rem,
+  xl: 2rem
+);
+
+@each $name, $size in $spacing-sizes {
+  // padding کلی
+  .q-pa-#{$name} { padding: $size !important; }
+  // margin کلی
+  .q-ma-#{$name} { margin:  $size !important; }
+
+  // padding جهت‌دار
+  .q-pt-#{$name} { padding-top:    $size !important; }
+  .q-pr-#{$name} { padding-right:  $size !important; }
+  .q-pb-#{$name} { padding-bottom: $size !important; }
+  .q-pl-#{$name} { padding-left:   $size !important; }
+  .q-px-#{$name} { padding-left:   $size !important; padding-right: $size !important; }
+  .q-py-#{$name} { padding-top:    $size !important; padding-bottom: $size !important; }
+
+  // margin جهت‌دار
+  .q-mt-#{$name} { margin-top:    $size !important; }
+  .q-mr-#{$name} { margin-right:  $size !important; }
+  .q-mb-#{$name} { margin-bottom: $size !important; }
+  .q-ml-#{$name} { margin-left:   $size !important; }
+  .q-mx-#{$name} { margin-left:   $size !important; margin-right: $size !important; }
+  .q-my-#{$name} { margin-top:    $size !important; margin-bottom: $size !important; }
+}
