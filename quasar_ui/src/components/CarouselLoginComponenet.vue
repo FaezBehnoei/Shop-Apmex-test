@@ -82,8 +82,8 @@ onUnmounted(() => {
 }
 
 .carousel-slides {
-  min-height: 50vh;
-  max-height: 50vh;
+  min-height: 40vh;
+  max-height: 40vh;
   display: flex;
   transition: transform 0.5s ease-in-out;
   will-change: transform; /* بهینه‌سازی GPU */
@@ -105,7 +105,7 @@ onUnmounted(() => {
   height: 100%;
   object-fit: contain;
   margin-bottom: 4.0625rem; /* 65px */
-  max-height: 50vh;
+  max-height: 40vh;
 }
 
 .dots {
