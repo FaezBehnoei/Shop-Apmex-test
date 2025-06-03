@@ -77,12 +77,12 @@ defineProps({
     color: rgba(12, 38, 71, 1);
     border: none;
 
-    &:hover {
-      background-color: var(--grey-normal-hover);
+    &:hover:not(:disabled) {
+    background-color: rgba(230, 114, 46, 1); // یا یه رنگ ملایم‌تر دلخواه
     }
 
     &:active {
-      background-color: var(--grey-normal-active);
+      background-color: rgba(204, 102, 41, 1);
     }
 
     &:disabled {
@@ -98,7 +98,7 @@ defineProps({
     color: var(--orange-primary);
 
     &:hover:not(:disabled) {
-      border: 1px solid var(--grey-normal-hover);
+      border: 1px solid rgba(230, 114, 46, 1);
     }
 
     &:active {
