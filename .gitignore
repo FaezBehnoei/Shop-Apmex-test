@@ -1,0 +1,50 @@
+# Node modules (for Quasar)
+node_modules/
+dist/
+.packaged/
+.quasar/
+.npm/
+.vscode/
+
+# Quasar build outputs
+*.log
+*.lock
+.DS_Store
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Flask virtual environment
+venv/
+env/
+*.env
+
+# Flask cache/migrations/logs
+instance/
+*.db
+*.sqlite3
+*.log
+
+# MacOS & system files
+.DS_Store
+Thumbs.db
+
+# Optional IDE stuff
+.idea/
+*.swp
+*.swo
+*.bak
+
+# Coverage/test
+htmlcov/
+.coverage
+.cache/
+.pytest_cache/
+frontend/quasar_ui/package.json
+frontend/quasar_ui/package-lock.json
+frontend/quasar_ui/package-lock.json
+Frontend/quasar_ui/mock-db.json
+Frontend/quasar_ui/routes.json
